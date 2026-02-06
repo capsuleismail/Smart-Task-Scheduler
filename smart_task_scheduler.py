@@ -404,7 +404,7 @@ class DependencyManager:
     def has_cycle_dfs(self):
         # Detect cycles using DFS with recursion stack.
         # It uses: visited and recursion stack sets.
-        # Detects back edges → cycle → ❌ invalid schedule.
+        # Detects back edges → cycle → invalid schedule.
 
         visited = set() # node fully processed
         recursion_stack = set() # nodes currently in DFS path
