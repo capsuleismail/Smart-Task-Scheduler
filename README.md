@@ -185,12 +185,219 @@ It intentionally balances clarity, performance, and extensibility.
 
 ---
 
-## Author
+# 🧪 Unit Test Suite – Task Scheduling System.
 
-Created as a systems-oriented Python project for learning and experimentation.
+## Overview.
+
+This module contains a **comprehensive unit and integration test suite** for the Task Scheduling System. It validates correctness, stability, and expected behavior across all major components:
+
+* Task creation and validation
+* Task management and persistence
+* Priority-based scheduling
+* Dependency handling and cycle detection
+* Dependency-aware scheduling
+* Event-driven execution simulation
+
+The tests are written using Python’s built-in `unittest` framework and are designed to be **deterministic, isolated, and repeatable**.
 
 ---
 
-## License
+## Purpose of This Test Suite.
 
-MIT License
+The test suite serves four main purposes:
+
+1. **Verify correctness** of individual components (unit tests)
+2. **Validate interactions** between components (integration tests)
+3. **Prevent regressions** during refactoring or optimization
+4. **Document system behavior** through executable examples
+
+Importantly, these tests **do not modify production code** — they only assert expected outcomes.
+
+---
+
+## Test Environment Setup
+
+### Global Timeline Reset
+
+Many tests reset the class-level counter:
+
+```python
+Task.global_timeline = 0
+```
+
+This ensures:
+
+* Predictable task IDs
+* Deterministic test results
+* Isolation between tests
+
+### Filesystem Cleanup
+
+Before testing CSV output, the test suite removes existing directories:
+
+```python
+shutil.rmtree("task_records")
+```
+
+This prevents false positives caused by leftover files from previous runs.
+
+---
+
+## Test Modules Explained.
+
+---
+
+## `TestTask`
+
+### What It Tests.
+
+* Valid task creation
+* Auto-generated task IDs
+* Input validation (priority, department)
+
+### Why It Matters.
+
+This ensures the **core data model is safe and strict**. Invalid tasks are rejected early, preventing corrupted schedules downstream.
+
+---
+
+## `TestTaskManager`
+
+### What It Tests.
+
+* Adding and retrieving tasks
+* Duplicate task ID protection
+* Task status updates
+* CSV file creation
+
+### Why It Matters.
+
+This validates:
+
+* O(1) task access via hash maps
+* Persistence of task state
+* Historical record keeping for later data analysis
+
+---
+
+## `TestScheduler`
+
+### What It Tests.
+
+* Priority ordering using a heap
+* Lazy deletion of tasks
+
+### Why It Matters.
+
+Confirms that:
+
+* High-priority tasks are always selected first
+* Deleted tasks are never executed
+* Heap-based scheduling remains efficient and correct
+
+---
+
+## `TestDependencyManager`
+
+### What It Tests.
+
+* Valid dependency graphs (DAGs)
+* Cycle detection using DFS
+
+### Why It Matters.
+
+This prevents:
+
+* Deadlocks
+* Infinite scheduling loops
+* Invalid execution plans
+
+Cycle detection runs in **O(V + E)** time.
+
+---
+
+## `TestDependencyAwareScheduler`
+
+### What It Tests.
+
+* Blocking of dependent tasks
+* Automatic unlocking of tasks after completion
+
+### Why It Matters.
+
+Validates the **integration of priority scheduling and dependency resolution**, mirroring real-world job pipelines and build systems.
+
+---
+
+## `TestExecutionSimulator`
+
+### What It Tests.
+
+* Full execution of tasks
+* Status transitions to COMPLETED
+* Execution logging
+
+### Why It Matters.
+
+Confirms the correctness of the **event-driven execution model**, ensuring:
+
+* Time advances correctly
+* Tasks complete as expected
+* Execution history is recorded for analysis
+
+---
+
+## Test Coverage Summary
+
+| Component                  | Covered |
+| -------------------------- | ------- |
+| Task model                 | ✅       |
+| TaskManager                | ✅       |
+| Priority scheduler         | ✅       |
+| Dependency graph           | ✅       |
+| Dependency-aware scheduler | ✅       |
+| Execution simulator        | ✅       |
+
+This suite tests both **individual units** and **end-to-end behavior**.
+
+---
+
+## How to Run the Tests.
+
+From the project root:
+
+```bash
+python -m unittest
+```
+
+Or run a specific test file:
+
+```bash
+python -m unittest test_scheduler.py
+```
+
+---
+
+## Design Philosophy
+
+These tests are intentionally:
+
+* **Black-box oriented** – verify outcomes, not implementation details
+* **Deterministic** – same input always yields same result
+* **Side-effect aware** – file system and state are explicitly managed
+
+Together, they provide strong confidence in the system’s correctness and make future changes safe.
+
+---
+
+## Conclusion
+
+This test suite elevates the project from a working prototype to a **reliable, maintainable system**. It demonstrates a solid understanding of:
+
+* Software correctness
+* Algorithm validation
+* Integration testing
+* Defensive programming
+
+Well-tested systems are trustworthy systems — this suite ensures exactly that.
+
