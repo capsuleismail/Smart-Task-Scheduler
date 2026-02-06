@@ -47,7 +47,7 @@ Each task contains:
 * `duration` ['1', '2', '3', '4', '5'],
 * `status` ['PENDING', 'ONGOING', 'COMPLETED'],
 * `department`['HR', 'ENGINEERING', 'MARKETING', 'SALES', 'FINANCE', 'IT', 'CUSTOMER_SUPPORT'],
-* `timeline` timeline is simply a timestamp when the task was created for tracing back.
+* `timeline` is simply a timestamp when the task was created for tracing back.
 
 Strict validation ensures only valid tasks are schedulable.
 
